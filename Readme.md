@@ -1,0 +1,1 @@
+Script and templates for zabbix
