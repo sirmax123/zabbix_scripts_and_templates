@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+ENV_FILE=${1}
+
+if [ -n "${ELASTICSEARCH_ADDRESS}" ]; then
+    echo "ELASTICSEARCH_ADDRESS=${ELASTICSEARCH_ADDRESS}" 2>&1  > ${ENV_FILE}
+else
+    echo "ELASTICSEARCH_ADDRESS=$(eval ${ELASTICSEARCH_ADDRESS_COMMAND})" 2>&1  > ${ENV_FILE}
+fi

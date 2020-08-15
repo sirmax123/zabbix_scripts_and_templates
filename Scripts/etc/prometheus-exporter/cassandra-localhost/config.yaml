@@ -1,0 +1,149 @@
+---
+hostPort: localhost:7199
+username:
+password:
+
+#lowercaseOutputLabelNames: true
+#lowercaseOutputName: true
+whitelistObjectNames:
+  - "java.lang:type=GarbageCollector,*"
+  - "java.lang:type=MemoryPool,*"
+  - "java.lang:type=Memory,*"
+  - "java.lang:type=ClassLoading,*"
+  - "java.lang:type=Compilation,*"
+  - "java.lang:type=MemoryManager,*"
+  - "java.lang:type=OperatingSystem,*"
+  - "java.lang:type=Runtime,*"
+  - "java.lang:type=Threading,*"
+  - "org.apache.cassandra.metrics:type=*,scope=*,*"
+
+
+# ColumnFamily is an alias for Table metrics
+blacklistObjectNames:
+  - "org.apache.cassandra.metrics:type=ColumnFamily,*"
+  - "org.apache.cassandra.metrics:type=Table,keyspace=system_auth,*"
+  - "org.apache.cassandra.metrics:type=Table,keyspace=system,*"
+  - "org.apache.cassandra.metrics:type=Table,keyspace=*,scope=*,name=BloomFilter,*"
+
+rules:
+- pattern: "java.lang<type=GarbageCollector, name=(.+)><>(.+):"
+  name: java.lang_GC
+  type: UNTYPED
+  labels:
+    "gc_name":     "$1"
+    "metric_name": "$2"
+
+- pattern: "java.lang<type=MemoryPool, name=(.+)><(.*)>(.*) "
+  name: java_lang_MemoryPool
+  type: UNTYPED
+  labels:
+    "name":   "$1"
+    "usage":  "$2"
+    "option": "$3"
+
+- pattern: "java.lang<type=Memory><(.*)>(.*):"
+  name: java_lang_Memory
+  type: UNTYPED
+  labels:
+    "memory_type":   "$1"
+    "metric_name":   "$2"
+
+- pattern: "java.lang<type=ClassLoading><>(.*):"
+  name: java_lang_ClassLoading
+  type: UNTYPED
+  labels:
+    "metric_name":   "$1"
+
+- pattern: "java.lang<type=Compilation><>(.*):"
+  name: java_lang_Compilation
+  type: UNTYPED
+  labels:
+    "metric_name":   "$1"
+
+- pattern: "java.lang<type=MemoryManager, name=(.*)><>(.*):"
+  name: java_lang_MemoryManager
+  type: UNTYPED
+  labels:
+    "metric_name":   "$1"
+    "option": "$2"
+
+- pattern: "java.lang<type=OperatingSystem><>(.*):"
+  name: java_lang_OperatingSystem
+  type: UNTYPED
+  labels:
+    "metric_name":   "$1"
+
+
+- pattern: "java.lang<type=Runtime><>(.*):"
+  name: java_lang_Runtime
+  type: UNTYPED
+  labels:
+    "metric_name":   "$1"
+
+
+- pattern: "java.lang<type=Threading><>(.*):"
+  name: java_lang_Threading
+  type: UNTYPED
+  labels:
+    "metric_name":   "$1"
+
+
+#- pattern: "org.apache.cassandra.metrics(.*)"
+#  name: TTT
+#  type: UNTYPED
+#  labels:
+#    "TTT": "$1"
+
+#"<type=ThreadPools, path=transport, scope=Native-Transport-Requests, name=ActiveTasks><>Value: 0",} 0.0
+- pattern: org.apache.cassandra.metrics<type=ThreadPools, path=(.*), scope=(.*), name=(.*)><>Value
+  name: cassandra_ThreadPools
+  type: UNTYPED
+  labels:
+    "path":  "$1"
+    "scope": "$2"
+    "name":  "$3"
+
+
+
+- pattern: org.apache.cassandra.metrics<type=(\S*)(?:, ((?!scope)\S*)=(\S*))?(?:, scope=(\S*))?, name=ReadLatency><>OneMinuteRate
+  name: cassandra_$1_ReadLatency_OneMinuteRate
+  type: UNTYPED
+  labels:
+    "$1": "$4"
+    "$2": "$3"
+
+- pattern: org.apache.cassandra.metrics<type=(\S*)(?:, ((?!scope)\S*)=(\S*))?(?:, scope=(\S*))?, name=WriteLatency><>OneMinuteRate
+  name: cassandra_$1_WriteLatency_OneMinuteRate
+  type: UNTYPED
+  labels:
+    "$1": "$4"
+    "$2": "$3"
+
+
+#
+# Emulate Prometheus 'Summary' metrics for the exported 'Histogram's.
+# TotalLatency is the sum of all latencies since server start
+#
+- pattern: org.apache.cassandra.metrics<type=(\S*)(?:, ((?!scope)\S*)=(\S*))?(?:, scope=(\S*))?, name=(.+)?(?:Total)(Latency)><>Count
+  name: cassandra_$1_$5$6_seconds_sum
+  type: UNTYPED
+  labels:
+    "$1": "$4"
+    "$2": "$3"
+  # Convert microseconds to seconds
+  valueFactor: 0.000001
+
+- pattern: org.apache.cassandra.metrics<type=(\S*)(?:, ((?!scope)\S*)=(\S*))?(?:, scope=(\S*))?, name=((?:.+)?(?:Latency))><>Count
+  name: cassandra_$1_$5_seconds_count
+  type: UNTYPED
+  labels:
+    "$1": "$4"
+    "$2": "$3"
+
+- pattern: org.apache.cassandra.metrics<type=(\S*)(?:, ((?!scope)\S*)=(\S*))?(?:, scope=(\S*))?, name=(.+)><>Count
+  name: cassandra_$1_$5_count
+  type: UNTYPED
+  labels:
+    "$1": "$4"
+    "$2": "$3"
+

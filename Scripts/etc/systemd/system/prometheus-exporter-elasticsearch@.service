@@ -1,0 +1,24 @@
+[Unit]
+Description=Prometeus ElasticSearch Exporter:  %i
+After=network.target
+
+[Service]
+PIDFile=/var/run/prometheus-exporter-elasticsearch.%i.pid
+Type=simple
+EnvironmentFile=/etc/prometheus-exporter-elasticsearch/prometheus-exporter
+EnvironmentFile=/etc/prometheus-exporter-elasticsearch/%i/env
+EnvironmentFile=-%t/%i-env.generated
+
+ExecStartPre=/usr/local/bin/elasticsearch_exporter_prestart_script %t/%i-env.generated
+
+ExecStart=/usr/local/bin/elasticsearch_exporter \
+	    --es.uri=${ELASTICSEARCH_SCHEME}${ELASTICSEARCH_ADDRESS}:${ELASTICSEARCH_PORT} \
+	    --web.telemetry-path="/metrics" \
+	    --web.listen-address="${BIND_ADDRESS}:${BIND_PORT}"
+
+
+SuccessExitStatus=0
+
+
+[Install]
+WantedBy=multi-user.target

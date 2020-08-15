@@ -1,0 +1,2 @@
+# Collect data iops for zabbix
+* * * * * root /usr/bin/timeout 60 /etc/zabbix/scripts/iostat-collect.sh /tmp/iostat.out 59 > /dev/null

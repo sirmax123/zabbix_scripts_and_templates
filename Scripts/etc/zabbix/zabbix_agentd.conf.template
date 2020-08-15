@@ -1,0 +1,11 @@
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+LogFile=/var/log/zabbix/zabbix_agentd.log
+LogFileSize=0
+Server=ip_address_here
+ServerActive=ip_address_here:10051
+# HostMetadata=827bebfe-6b8c-4ee5-8f2c-26c4ba637946_Some_Group
+# HostMetadata=1cba9eba-1c30-4e1c-97cf-da0ab032a322_Other_Group
+Timeout=30
+Include=/etc/zabbix/zabbix_agentd.d/*.conf
+StartAgents=5
+

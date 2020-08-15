@@ -1,0 +1,21 @@
+[Unit]
+Description=Prometeus Exporter:  %i
+After=network.target
+
+[Service]
+PIDFile=/var/run/prometheus-exporter.%i.pid
+Type=simple
+EnvironmentFile=/etc/prometheus-exporter/prometheus-exporter
+EnvironmentFile=/etc/prometheus-exporter/%i/env
+
+ExecStart=/usr/bin/java \
+		-jar ${JAR_FILE} \
+		${BIND_ADDR}:${BIND_PORT} \
+		/etc/prometheus-exporter/%i/config.yaml
+
+
+SuccessExitStatus=0 143
+
+
+[Install]
+WantedBy=multi-user.target
