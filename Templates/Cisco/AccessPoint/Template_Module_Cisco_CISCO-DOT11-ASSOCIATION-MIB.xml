@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2022-09-26T08:06:09Z</date>
+    <groups>
+        <group>
+            <name>Templates/Modules</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</template>
+            <name>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</name>
+            <groups>
+                <group>
+                    <name>Templates/Modules</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>cDot11ClientBytes</name>
+                </application>
+                <application>
+                    <name>cDot11ClientErrors</name>
+                </application>
+                <application>
+                    <name>cDot11ClientPackets</name>
+                </application>
+                <application>
+                    <name>cDot11Clients</name>
+                </application>
+                <application>
+                    <name>cDot11ClientSignal</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>cDot11ActiveWirelessClientsCount</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#CLIENTSCOUNT},1.3.6.1.4.1.9.9.273.1.1.2.1.1]</snmp_oid>
+                    <key>cDot11ActiveWirelessClientsCount</key>
+                    <lifetime>300d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>cDot11ActiveWirelessClientsCount [ {#DOT1RADIO_IFNAME} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>1.3.6.1.4.1.9.9.273.1.1.2.1.1.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ActiveWirelessClientsCount[{#DOT1RADIO_IFNAME}]</key>
+                            <units>Devices</units>
+                            <applications>
+                                <application>
+                                    <name>cDot11Clients</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>cDot11ActiveWirelessClientsCoun [ {#DOT1RADIO_IFNAME} ]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ActiveWirelessClientsCount[{#DOT1RADIO_IFNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <params>//Zabbix.Log(3, value)
+
+var records = JSON.parse(value);
+
+for (i = 0; i &lt; records.length; i++) {
+    var dot1RadioIfIndex = records[i][&quot;{#SNMPINDEX}&quot;]
+    records[i]['{#DOT1RADIO_IFINDEX}'] = dot1RadioIfIndex
+    records[i]['{#DOT1RADIO_IFNAME}'] = &quot;Dot11Radio&quot; + (parseInt(dot1RadioIfIndex) - 1).toString()
+}
+//Zabbix.Log(3, JSON.stringify(records))
+return JSON.stringify(records);</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>CISCO-DOT11-ASSOCIATION-MIB</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#S},1.3.6.1.4.1.9.9.273.1.3.1.1.3]</snmp_oid>
+                    <key>CISCO-DOT11-ASSOCIATION-MIB</key>
+                    <lifetime>365d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>07 cDot11ClientBytesReceived [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.7.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientBytesReceived[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>bytes/s</units>
+                            <description>cDot11ClientBytesReceived OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;byte&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;The number of bytes received from this client.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 7 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientBytes</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>09 cDot11ClientBytesSent [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.9.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientBytesSent[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>bytes/s</units>
+                            <description>cDot11ClientBytesSent OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;byte&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;The number of bytes sent to this client.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 9 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientBytes</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>10 cDot11ClientDuplicates [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.10.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientDuplicates[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientDuplicates OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;packet&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This counter increments when a packet for this&#13;
+        client is received and the Sequence Control field&#13;
+        in the packet header indicates the packet is a&#13;
+        duplicate.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 10 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientErrors</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>14 cDot11ClientMicErrors [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.14.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientMicErrors[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientMicErrors OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;error&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This is the number of MIC errors for this client.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 14 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientErrors</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>15 cDot11ClientMicMissingFrames [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.15.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientMicMissingFrames[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientMicMissingFrames OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;packet&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This is the number of missing MIC packets for&#13;
+        this client.&quot;.&#13;
+    ::= { cDot11ClientStatisticEntry 15 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientErrors</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>12 cDot11ClientMsduFails [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.12.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientMsduFails[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientMsduFails OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;packet&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This counter increments when an MSDU is not&#13;
+        transmitted successfully for this client due to the&#13;
+        number of transmit attempts exceeding some limit.&#13;
+    ::= { cDot11ClientStatisticEntry 12 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientErrors</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>11 cDot11ClientMsduRetries [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.11.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientMsduRetries[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientMsduRetries OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;packet&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This counter increments when an MSDU is successfully&#13;
+        transmitted after one or more retransmissions for this&#13;
+        client.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 11 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientErrors</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>06 cDot11ClientPacketsReceived [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.6.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientPacketsReceived[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientPacketsReceived OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;packet&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;The number of packets received from this client.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 6 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientPackets</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>08 cDot11ClientPacketsSent [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.8.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientPacketsSent[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>pps</units>
+                            <description>cDot11ClientPacketsSent OBJECT-TYPE&#13;
+    SYNTAX          Counter32&#13;
+    UNITS           &quot;packet&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;The number of packets sent to this client.&quot;.&#13;
+    ::= { cDot11ClientStatisticEntry 8 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientPackets</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>03 cDot11ClientSignalStrength [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.3.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientSignalStrength[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>dBm</units>
+                            <description>cDot11ClientSignalStrength OBJECT-TYPE&#13;
+    SYNTAX          Integer32 (-100..0)&#13;
+    UNITS           &quot;dBm&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This is a device-dependent measure of the signal&#13;
+        strength of the most recently received packet from.&#13;
+        this client.  It may be normalized or unnormalized.&quot;.&#13;
+    ::= { cDot11ClientStatisticEntry 3 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientSignal</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>04 cDot11ClientSigQuality [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.4.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientSigQuality[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>%</units>
+                            <description>cDot11ClientSigQuality OBJECT-TYPE&#13;
+    SYNTAX          Unsigned32 (0..100)&#13;
+    UNITS           &quot;percentage&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;This is a device-dependent measure of the signal&#13;
+        quality of the most recently received packet from.&#13;
+        this client.&quot;.&#13;
+    ::= { cDot11ClientStatisticEntry 4 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11ClientSignal</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>02 cDot11ClientUpTime [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.9.9.273.1.3.1.1.2.{#SNMPINDEX}</snmp_oid>
+                            <key>cDot11ClientUpTime[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                            <units>s</units>
+                            <description>cDot11ClientUpTime OBJECT-TYPE&#13;
+    SYNTAX          Unsigned32&#13;
+    UNITS           &quot;second&quot;&#13;
+    MAX-ACCESS      read-only&#13;
+    STATUS          current&#13;
+    DESCRIPTION&#13;
+        &quot;The time in seconds that this client has been&#13;
+        associated with this device.&quot;&#13;
+    ::= { cDot11ClientStatisticEntry 2 }</description>
+                            <applications>
+                                <application>
+                                    <name>cDot11Clients</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>cDot11ClientBytes [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientBytesReceived[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientBytesSent[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>cDot11ClientErrors [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientDuplicates[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientMsduRetries[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>3</sortorder>
+                                    <color>2774A4</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientMsduFails[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>4</sortorder>
+                                    <color>A54F10</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientMicErrors[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>5</sortorder>
+                                    <color>FC6EA3</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientMicMissingFrames[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>cDot11ClientPackets[ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientPacketsReceived[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientPacketsSent[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>cDot11ClientSignal [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientSignalStrength[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <yaxisside>RIGHT</yaxisside>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientSigQuality[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>cDot11ClientUpTime [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <drawtype>FILLED_REGION</drawtype>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                                        <key>cDot11ClientUpTime[{#MAC}@{#DOT1RADIO_IFNAME}:{#SSID}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <params>//debugPrefix = &quot;TESTING\n&quot;
+//Zabbix.Log(3, &quot;------------------------&quot;)
+//Zabbix.Log(3, debugPrefix + &quot;this is a log entry written with 'Warning' log level&quot;)
+//Zabbix.Log(3, debugPrefix  + value)
+//Zabbix.Log(3, &quot;------------------------&quot;)
+
+
+var records = JSON.parse(value);
+
+for (i = 0; i &lt; records.length; i++) {
+    var OID = records[i][&quot;{#SNMPINDEX}&quot;].split('.')
+    // IFINDEX AND IFNAME
+    var dot1RadioIfIndex = OID.shift();
+    records[i]['{#DOT1RADIO_IFINDEX}'] = dot1RadioIfIndex
+    records[i]['{#DOT1RADIO_IFNAME}'] = &quot;Dot11Radio&quot; + (parseInt(dot1RadioIfIndex) - 1).toString()
+
+    // get mac as 6 last digits converted dec -&gt; hex and joined with ':'
+    var MAC = &quot;&quot;
+    var MACDigitHex
+    for (j = 0; j &lt; 6; j++) {
+        MACDigitDec = OID.pop();
+
+        MACDigitHex = parseInt(MACDigitDec).toString(16);
+        MAC = MACDigitHex + &quot; &quot; + MAC
+    }
+    records[i]['{#MAC}'] = MAC.trim().split(&quot; &quot;).join(&quot;:&quot;)
+
+    // SSID. The first octet is length, others are ASCII characters 
+    SSID = &quot;&quot;
+    ssidLength = OID.shift();
+    
+    for (j = 0; j &lt; ssidLength; j++) {
+      SSID += String.fromCharCode(parseInt(OID[j]));
+
+    }
+    records[i]['{#SSID}'] = SSID
+}
+//Zabbix.Log(3, &quot;------------------------&quot;)
+//Zabbix.Log(3, JSON.stringify(records))
+return JSON.stringify(records);
+
+//return value
+
+
+</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+            <screens>
+                <screen>
+                    <name>cDot11ActiveWirelessClientsBytesRxTx</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>cDot11ClientBytes [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                                <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>200</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+                <screen>
+                    <name>cDot11ActiveWirelessClientsCount</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>cDot11ActiveWirelessClientsCoun [ {#DOT1RADIO_IFNAME} ]</name>
+                                <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>300</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+                <screen>
+                    <name>cDot11ActiveWirelessClientsSignalLevels</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>cDot11ClientSignal [ {#MAC}@{#DOT1RADIO_IFNAME}:{#SSID} ]</name>
+                                <host>Template Module Cisco CISCO-DOT11-ASSOCIATION-MIB</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>200</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+            </screens>
+        </template>
+    </templates>
+</zabbix_export>
