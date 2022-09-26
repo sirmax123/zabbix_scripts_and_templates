@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2022-09-26T07:33:27Z</date>
+    <groups>
+        <group>
+            <name>Templates/Modules</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Module UBNT AirMAX</template>
+            <name>Template Module UBNT AirMAX</name>
+            <groups>
+                <group>
+                    <name>Templates/Modules</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>AirMax</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>UBNT AirMAX Active Wireless Clients</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#CLIENTNAME},1.3.6.1.4.1.41112.1.4.7.1.2.1]</snmp_oid>
+                    <key>ubntAirMAXActiveWirelessClients</key>
+                    <lifetime>300d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>09 ubntStaAmc [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.9.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaAmc[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>ubntStaAmc OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;airMAX capacity&quot;&#13;
+        ::= { ubntStaEntry 9 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>07 ubntStaAmp [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.7.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaAmp[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>ubntStaAmp OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;airMAX priority&quot;&#13;
+        ::= { ubntStaEntry 7 }&#13;
+&#13;
+&#13;
+В AirMax режиме так же добавлен функционал Dual TDMA. Который позволяет назначать разный приоритет для клиентов с плохим уровнем сигнала и для &quot;хороших&quot; клиентов, что исключает проблему &quot;медленного клиента&quot;, которые снижает общую производительность все абонентов БС.&#13;
+Однако вреализации от UBNT тут есть один нюанс, устанавливать этот приоритет нужно на стороне клиентского устроиства (да-да как раз для этого и нужна настройка AirMax Priority, а не для того чтобы &quot;подключаться или не подключаться к AirMax сетям&quot;). Как выставлять AirMax Priority смотрите пункт 14.&#13;
+Для справки: Устройства серии &quot;M365&quot; работают только в TDMA режиме!&#13;
+http://www.ubnt.com/forum/showthread.php?t=23526</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>08 ubntStaAmq [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.8.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaAmq[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>ubntStaAmq OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;airMAX quality&quot;&#13;
+        ::= { ubntStaEntry 8 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>06 ubntStaClientConnectionQuality [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.8.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaCcq[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>%</units>
+                            <description>ubntStaCcq OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;CCQ in %&quot;&#13;
+        ::= { ubntStaEntry 6 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>MULTIPLIER</type>
+                                    <params>0.1</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>15 ubntStaConnTime [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.15.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaConnTime[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>ubntStaConnTime OBJECT-TYPE&#13;
+        SYNTAX     TimeTicks&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;Connection Time in seconds&quot;&#13;
+        ::= { ubntStaEntry 15 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>05 ubntStaDistance [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.5.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaDistance[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>M</units>
+                            <description>ubntStaDistance OBJECT-TYPE&#13;
+        SYNTAX Integer32 (1..65535)&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS current&#13;
+        DESCRIPTION &quot;Distance&quot;&#13;
+        ::= { ubntStaEntry 5 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>17 ubntStaEntry17 [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.17.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaEntry17[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>10 ubntStaLastIp [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.10.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaLastIp[{#CLIENTNAME}]</key>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>ubntStaLastIp OBJECT-TYPE&#13;
+        SYNTAX     IpAddress&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;Last known IP address&quot;&#13;
+        ::= { ubntStaEntry 10 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>16 ubntStaLocalCINR [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.16.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaLocalCINR[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>dB</units>
+                            <description>ubntStaLocalCINR OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;Local CINR&quot;&#13;
+        ::= { ubntStaEntry 16 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>01 ubntStaMac [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.1.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaMac[{#CLIENTNAME}]</key>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>ubntStaMac OBJECT-TYPE&#13;
+        SYNTAX     MacAddress&#13;
+        MAX-ACCESS not-accessible.&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;Station MAC address&quot;&#13;
+        ::= { ubntStaEntry 1 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>04 ubntStaNoiseFloor [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.4.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaNoiseFloor[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>dBm</units>
+                            <description>ubntStaNoiseFloor OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;Noise floor&quot;&#13;
+        ::= { ubntStaEntry 4 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>14 ubntStaRxBytes [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.14.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaRxBytes[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>bytes/s</units>
+                            <description>ubntStaRxBytes OBJECT-TYPE&#13;
+        SYNTAX     Counter64&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;TX rate&quot;&#13;
+        ::= { ubntStaEntry 14 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>12 ubntStaRxRate [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.12.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaRxRate[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>ubntStaRxRate OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;RX rate&quot;&#13;
+        ::= { ubntStaEntry 12 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>03 ubntStaSignal [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.3.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaSignal[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>dBm</units>
+                            <description>ubntStaSignal OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;Signal strength, dBm&quot;&#13;
+        ::= { ubntStaEntry 3 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>13 ubntStaTxBytes [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.13.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaTxBytes[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>bytes/s</units>
+                            <description>ubntStaTxBytes OBJECT-TYPE&#13;
+        SYNTAX     Counter64&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;TX bytes&quot;&#13;
+        ::= { ubntStaEntry 13 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <params/>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>11 ubntStaTxRate [{#CLIENTNAME}]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.4.1.41112.1.4.7.1.11.1.{#SNMPINDEX}</snmp_oid>
+                            <key>ubntStaTxRate[{#CLIENTNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>ubntStaTxRate OBJECT-TYPE&#13;
+        SYNTAX     Integer32&#13;
+        MAX-ACCESS read-only&#13;
+        STATUS     current&#13;
+        DESCRIPTION &quot;TX rate&quot;&#13;
+        ::= { ubntStaEntry 11 }</description>
+                            <applications>
+                                <application>
+                                    <name>AirMax</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>ubntStaAmp/Amq/Amc [{#CLIENTNAME}]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaAmp[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaAmq[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>3</sortorder>
+                                    <color>2774A4</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaAmc[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>ubntStaClientConnectionQuality [{#CLIENTNAME}]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaCcq[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>ubntStaDistance [{#CLIENTNAME}]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaDistance[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>ubntSta Signal/Noise  [{#CLIENTNAME}]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaSignal[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaNoiseFloor[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>3</sortorder>
+                                    <color>2774A4</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaLocalCINR[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>ubntStaTx/RxBytes [{#CLIENTNAME}]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaTxBytes[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaRxBytes[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>ubntStaTx/RxRate [{#CLIENTNAME}]</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaTxRate[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Template Module UBNT AirMAX</host>
+                                        <key>ubntStaRxRate[{#CLIENTNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <screens>
+                <screen>
+                    <name>ubntStaDistance</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>ubntStaDistance [{#CLIENTNAME}]</name>
+                                <host>Template Module UBNT AirMAX</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>200</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+                <screen>
+                    <name>ubntSta Signal/Noise</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>ubntSta Signal/Noise  [{#CLIENTNAME}]</name>
+                                <host>Template Module UBNT AirMAX</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>200</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+                <screen>
+                    <name>ubntStaTx/RxBytes</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>ubntStaTx/RxBytes [{#CLIENTNAME}]</name>
+                                <host>Template Module UBNT AirMAX</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>200</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+                <screen>
+                    <name>ubntStaTx/RxRate</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <style>0</style>
+                            <resource>
+                                <name>ubntStaTx/RxRate [{#CLIENTNAME}]</name>
+                                <host>Template Module UBNT AirMAX</host>
+                            </resource>
+                            <width>1500</width>
+                            <height>200</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <url/>
+                            <application/>
+                            <max_columns>1</max_columns>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+            </screens>
+        </template>
+    </templates>
+</zabbix_export>
